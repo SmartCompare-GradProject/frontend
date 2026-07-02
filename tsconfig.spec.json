@@ -4,6 +4,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": ["src/app/*"]
+    },
     "types": [
       "vitest/globals"
     ]
