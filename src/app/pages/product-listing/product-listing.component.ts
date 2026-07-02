@@ -164,18 +164,24 @@ export class ProductListingComponent implements OnInit {
   }
 
   private buildSearchFilters(): ProductSearchFilters {
-    return {
+    const filters: ProductSearchFilters = {
       type: this.activeFilters.type,
       q: this.activeFilters.q || undefined,
       brands: this.activeFilters.brands.length ? this.activeFilters.brands.join(',') : undefined,
       minPrice: this.getMinPriceForApi(),
       maxPrice: this.getMaxPriceForApi(),
-      storage: this.specFilters['storage']?.length ? this.specFilters['storage'].join(',') : undefined,
-      ram: this.specFilters['ram']?.length ? this.specFilters['ram'].join(',') : undefined,
       sort: this.activeFilters.sort,
       page: this.activeFilters.page,
       size: PRODUCT_LISTING_PAGE_SIZE,
     };
+
+    for (const [key, values] of Object.entries(this.specFilters)) {
+      if (values.length) {
+        filters[key] = values.join(',');
+      }
+    }
+
+    return filters;
   }
 
   /** Only send minPrice when above the catalog minimum (active filter). */

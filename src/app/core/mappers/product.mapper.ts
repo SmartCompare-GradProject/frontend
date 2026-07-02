@@ -191,7 +191,6 @@ function mapVendorListingsToVendorInfo(
       price,
       priceValue,
       url: listing.url || '#',
-      availability: 'In Stock',
     };
   });
 
@@ -297,7 +296,6 @@ export function mapProductDetailToProductDetails(detail: ProductDetailApi): Prod
         price: priceValue != null ? formatEgpPrice(priceValue) : baseProduct.price,
         priceValue,
         url: String(parsed['url'] ?? '#'),
-        availability: 'In Stock',
       },
     ];
   }

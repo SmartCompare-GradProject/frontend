@@ -25,11 +25,6 @@ export class ProductCardComponent {
   readonly isSelected = input<boolean>(false);
   @Output() toggleSelect = new EventEmitter<void>();
 
-  preventPropagation(event: Event) {
-    event.stopPropagation();
-    event.preventDefault();
-  }
-
   onToggle() {
     this.toggleSelect.emit();
   }

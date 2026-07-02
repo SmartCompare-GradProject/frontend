@@ -64,11 +64,6 @@ export class LandingPage {
       description: 'Get tailored recommendations based on your specific usage patterns and budget.',
     },
     {
-      icon: 'trending_down',
-      title: 'Price Tracking',
-      description: 'Visualize daily-updated price history and set smart alerts to catch price drops.',
-    },
-    {
       icon: 'table_view',
       title: 'Deep Spec Comparison',
       description: 'Generate comprehensive side-by-side technical tables instantly.',
@@ -77,7 +72,6 @@ export class LandingPage {
 
   protected readonly trustItems: TrustItem[] = [
     { title: 'Transparent Estimates', description: 'We clearly label AI-predicted specs.' },
-    { title: 'Real User Sentiment', description: 'Aggregated sentiment analysis.' },
     { title: 'No Sponsored bias', description: 'Our comparison algorithm ranks purely on value.' },
   ];
 }

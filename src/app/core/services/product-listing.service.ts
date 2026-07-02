@@ -46,7 +46,7 @@ export interface VendorInfo {
   price: string;
   priceValue?: number | null;
   url: string;
-  availability: string;
+  availability?: string | null;
   letter: string;
 }
 
@@ -59,6 +59,7 @@ export interface ProductDetails extends Product {
 export interface AiSummary {
   summaryText: string;
   requiresLogin?: boolean;
+  requiresPreferences?: boolean;
 }
 
 export interface ProductListingPage {
@@ -74,11 +75,10 @@ export interface ProductSearchFilters {
   brands?: string;
   maxPrice?: number;
   minPrice?: number;
-  storage?: string;
-  ram?: string;
   sort?: string;
   page?: number;
   size?: number;
+  [specKey: string]: string | number | undefined;
 }
 
 /** Hard cap on products fetched per request — prevents massive payloads freezing the UI. */
@@ -230,8 +230,26 @@ export class ProductListingService {
       params = params.set('maxPrice', String(Math.round(filters.maxPrice)));
     }
 
-    if (filters.storage) params = params.set('storage', filters.storage);
-    if (filters.ram) params = params.set('ram', filters.ram);
+    const reservedFilterKeys = new Set([
+      'type',
+      'q',
+      'brands',
+      'minPrice',
+      'maxPrice',
+      'sort',
+      'page',
+      'size',
+    ]);
+
+    for (const [key, value] of Object.entries(filters)) {
+      if (reservedFilterKeys.has(key)) {
+        continue;
+      }
+
+      if (typeof value === 'string' && value.trim()) {
+        params = params.set(key, value);
+      }
+    }
 
     const apiSort = mapListingSortToApi(filters.sort);
     if (apiSort) {

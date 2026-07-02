@@ -5,7 +5,7 @@
     
     @if (showMatchBadge()) {
       <div
-        class="absolute top-3 left-3 z-10 flex max-w-[calc(100%-3rem)] flex-wrap items-center gap-1 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-lg"
+        class="absolute top-3 left-3 z-10 flex max-w-[calc(100%-1.5rem)] flex-wrap items-center gap-1 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-lg"
         style="background: linear-gradient(135deg, #135bec 0%, #7c3aed 100%);"
       >
         <span class="material-symbols-outlined text-[14px]!">bolt</span>
@@ -16,10 +16,6 @@
         }
       </div>
     }
-
-    <button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors z-10">
-      <span class="material-symbols-outlined text-[20px]!">favorite</span>
-    </button>
 
     <img
       [src]="imageUrl()"
