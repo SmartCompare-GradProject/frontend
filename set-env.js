@@ -10,3 +10,4 @@ const envConfigFile = `export const environment = {
 
 fs.writeFileSync(targetPath, envConfigFile);
 console.log('Environment variables set for production build.');
+
