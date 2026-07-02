@@ -15,7 +15,7 @@ import { AdminProductMockService } from '@app/admin/services/mocks/admin-product
 export class AdminProductService {
   private readonly http = inject(HttpClient);
   private readonly mock = inject(AdminProductMockService);
-  private readonly apiUrl = environment.apiBaseUrl;
+  private readonly apiUrl = `${environment.apiUrl}/api/v1`;
 
   getCategories(): Observable<CategoryDto[]> {
     if (environment.useMockAdminApi) {

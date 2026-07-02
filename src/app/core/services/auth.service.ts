@@ -11,7 +11,7 @@ import { LoginResponse } from '@app/core/models/auth-session.model';
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = environment.apiBaseUrl;
+  private readonly apiUrl = `${environment.apiUrl}/api/v1`;
 
   register(email: string, password: string): Observable<unknown> {
     return this.http

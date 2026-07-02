@@ -11,7 +11,7 @@ import { AdminUserMockService } from '@app/admin/services/mocks/admin-user.mock.
 export class AdminUserService {
   private readonly http = inject(HttpClient);
   private readonly mock = inject(AdminUserMockService);
-  private readonly apiUrl = environment.apiBaseUrl;
+  private readonly apiUrl = `${environment.apiUrl}/api/v1`;
 
   listUsers(page = 0, size = 20): Observable<PagedResponse<AdminUserListItemDto>> {
     if (environment.useMockAdminApi) {

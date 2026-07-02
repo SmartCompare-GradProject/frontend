@@ -15,7 +15,7 @@ import type {
 })
 export class PreferenceService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = environment.apiBaseUrl;
+  private readonly apiUrl = `${environment.apiUrl}/api/v1`;
 
   getOptions(): Observable<PreferenceOptionsResponse> {
     return this.http

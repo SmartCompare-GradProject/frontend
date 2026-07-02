@@ -120,7 +120,7 @@ export class ProductListingService {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly toast = inject(ToastService);
-  private readonly apiUrl = environment.apiBaseUrl;
+  private readonly apiUrl = `${environment.apiUrl}/api/v1`;
 
   selectedIds = signal<number[]>([]);
 
