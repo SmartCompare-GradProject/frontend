@@ -8,4 +8,8 @@ export interface ProductCardDto {
   imageAlt: string;
   showMatchBadge: boolean;
   mainSpecs?: string[];
+  /** Raw list API field — comma-joined variant RAM values (e.g. "8GB, 12GB"). */
+  ram?: string | null;
+  /** Raw list API field — comma-joined variant storage values (e.g. "128GB, 256GB"). */
+  storage?: string | null;
 }

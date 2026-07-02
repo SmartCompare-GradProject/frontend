@@ -40,6 +40,46 @@ export function normalizeCategorySlug(slug: string): string {
   return CATEGORY_SLUG_ALIASES[slug] ?? slug;
 }
 
+const LIST_API_SPEC_CATEGORIES = new Set(['mobile', 'laptops']);
+
+function formatListApiRamBadge(ram: string): string {
+  const value = ram.split(',')[0]?.trim();
+  if (!value) {
+    return '';
+  }
+  return /\bRAM\b/i.test(value) ? value : `${value} RAM`;
+}
+
+function formatListApiStorageBadge(storage: string): string {
+  return storage.split(',')[0]?.trim() ?? '';
+}
+
+/** Builds card badges from denormalized `ram` / `storage` on list/trending responses. */
+function mainSpecsFromListApiFields(card: ProductCardApi): string[] | null {
+  const category = normalizeCategorySlug(card.category_slug);
+  if (!LIST_API_SPEC_CATEGORIES.has(category)) {
+    return null;
+  }
+
+  const badges: string[] = [];
+
+  if (card.ram?.trim()) {
+    const ramBadge = formatListApiRamBadge(card.ram);
+    if (ramBadge) {
+      badges.push(ramBadge);
+    }
+  }
+
+  if (card.storage?.trim()) {
+    const storageBadge = formatListApiStorageBadge(card.storage);
+    if (storageBadge) {
+      badges.push(storageBadge);
+    }
+  }
+
+  return badges.length > 0 ? badges.slice(0, 2) : null;
+}
+
 export function mapProductCardToProduct(card: ProductCardApi): Product {
   let specs: Record<string, unknown> = {};
   try {
@@ -70,6 +110,11 @@ export function mapProductCardToProduct(card: ProductCardApi): Product {
       ? String(specs['rating'])
       : null) ?? 'N/A';
 
+  const apiMainSpecs = mainSpecsFromListApiFields(card);
+  const mainSpecs =
+    apiMainSpecs ??
+    extractMainProductSpecs(specs, { categorySlug: card.category_slug });
+
   return {
     id: card.id,
     title: card.name || 'Unknown Product',
@@ -81,7 +126,9 @@ export function mapProductCardToProduct(card: ProductCardApi): Product {
     imageUrl,
     imageAlt: card.name || 'Product image',
     showMatchBadge: card.is_recommended,
-    mainSpecs: extractMainProductSpecs(specs, { categorySlug: card.category_slug }),
+    ram: card.ram ?? null,
+    storage: card.storage ?? null,
+    mainSpecs,
   };
 }
 
@@ -218,6 +265,8 @@ export function mapProductDetailToProductDetails(detail: ProductDetailApi): Prod
     has_variants: detail.has_variants,
     price: null,
     is_recommended: false,
+    ram: null,
+    storage: null,
   };
 
   const baseProduct = mapProductCardToProduct(cardLike);

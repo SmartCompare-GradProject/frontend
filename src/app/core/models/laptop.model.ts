@@ -1,21 +1,35 @@
+/**
+ * Parsed laptop product specs JSON (`LaptopSpecs` on the backend).
+ * Value fields use backend snake_case where applicable; prediction flags are camelCase.
+ */
 export interface Laptop {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  name: string;
-  brand: string;
-  release_date: string | null;
-  resolution: string | null;
-  aspect_ratio: string | null;
-  refresh_rate: number | null;
-  hdr: string | null;
-  os: string | null;
-  keyboard_backlit: boolean | null;
   battery: string | null;
-  is_battery_predicted: boolean | null;
-  battery_life: string | null;
-  is_battery_life_predicted: boolean | null;
-  power_efficiency_score: number | null;
-  is_power_efficiency_score_predicted: boolean | null;
-  weight: number | null;
+  camera: string | null;
+  color: string | null;
+  colour_gamut: string | null;
+  isColourGamutPredicted: boolean | null;
+  graphics_card: string | null;
+  graphics_card_tgp: string | null;
+  isGraphicsCardTgpPredicted: boolean | null;
+  keyboard: string | null;
+  laptop_ports: unknown[] | null;
+  memory: string | null;
+  memory_slots: string | null;
+  model: string | null;
+  operating_system: string | null;
+  panel: string | null;
+  isPanelPredicted: boolean | null;
+  ports: string | null;
+  power_adapter: string | null;
+  processor: string | null;
+  refresh_rate: string | null;
+  resolution: string | null;
+  screen_size: string | null;
+  source: string | null;
+  speaker: string | null;
+  storage: string | null;
+  storage_slot: string | null;
+  touchscreen: unknown | null;
+  isTouchscreenPredicted: boolean | null;
+  weight: string | null;
 }

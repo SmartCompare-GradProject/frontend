@@ -13,6 +13,9 @@ export interface ProductCardApi {
   has_variants: boolean;
   price: number | null;
   is_recommended: boolean;
+  /** Denormalized from product + variant specs (mobile/laptops list responses). */
+  ram: string | null;
+  storage: string | null;
 }
 
 export interface ProductCategoryApi {

@@ -1,41 +1,37 @@
+/**
+ * Parsed mobile product specs JSON (`MobileSpecs` on the backend).
+ * Field names match the backend contract (camelCase).
+ */
 export interface Phone {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  name: string;
-  brand: string;
-  release_date: string | null;
-  height: number | null;
-  width: number | null;
-  thickness: number | null;
-  weight: number | null;
-  build_front: string | null;
-  build_back: string | null;
-  build_frame: string | null;
-  sim_type: string | null;
-  display_type: string | null;
-  display_size: number | null;
-  display_resolution: string | null;
-  refresh_rate: number | null;
-  is_refresh_rate_predicted: boolean | null;
-  hdr: string | null;
-  display_protection: string | null;
-  aspect_ratio: string | null;
-  screen_to_body_ratio: number | null;
-  is_screen_to_body_ratio_predicted: boolean | null;
   os: string | null;
-  chipset: string | null;
-  battery_capacity: number | null;
-  is_battery_capacity_predicted: boolean | null;
-  battery_score: number | null;
-  is_battery_score_predicted: boolean | null;
-  reverse_charging: boolean | null;
-  main_camera: string | null;
-  selfie_camera: string | null;
-  camera_features: string | null;
-  camera_quality_score: number | null;
-  is_camera_quality_score_predicted: boolean | null;
-  usb: string | null;
+  hdr: unknown | null;
   lan: string | null;
+  usb: string | null;
+  width: number | null;
+  height: number | null;
+  weight: number | null;
+  chipset: string | null;
+  simType: string | null;
   bluetooth: string | null;
+  buildBack: string | null;
+  thickness: number | null;
+  buildFrame: string | null;
+  buildFront: string | null;
+  mainCamera: string | null;
+  aspectRatio: string | null;
+  displaySize: number | null;
+  displayType: string | null;
+  refreshRate: number | null;
+  isRefreshRatePredicted: boolean | null;
+  batteryScore: string | null;
+  isBatteryScorePredicted: boolean | null;
+  selfieCamera: string | null;
+  cameraFeatures: string | null;
+  batteryCapacity: number | null;
+  isBatteryCapacityPredicted: boolean | null;
+  reverseCharging: boolean | null;
+  displayProtection: string | null;
+  displayResolution: string | null;
+  screenToBodyRatio: number | null;
+  isScreenToBodyRatioPredicted: boolean | null;
 }
