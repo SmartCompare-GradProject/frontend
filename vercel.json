@@ -3,7 +3,7 @@
   "outputDirectory": "dist/prototype/browser",
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ]
