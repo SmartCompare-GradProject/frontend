@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://smartcompare-backend-production-527d.up.railway.app',
+  apiUrl: 'https://backend-production-47b1.up.railway.app',
   useMockAdminApi: false,
 };

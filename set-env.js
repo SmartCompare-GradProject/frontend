@@ -3,7 +3,7 @@ const fs = require('fs');
 const targetPath = './src/environments/environment.prod.ts';
 const envConfigFile = `export const environment = {
   production: true,
-  apiUrl: '${process.env.BACKEND_URL || 'https://smartcompare-backend-production-527d.up.railway.app'}',
+  apiUrl: '${process.env.BACKEND_URL || 'https://backend-production-47b1.up.railway.app'}',
   useMockAdminApi: false,
 };
 `;
