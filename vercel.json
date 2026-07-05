@@ -1,8 +1,9 @@
 {
+  "outputDirectory": "dist/prototype/browser",
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/index.csr.html"
     }
   ]
 }
