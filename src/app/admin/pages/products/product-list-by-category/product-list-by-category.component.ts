@@ -1,9 +1,11 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AdminProductService } from '@app/admin/services/admin-product.service';
-import { AdminProductListItemDto, CategoryDto } from '@app/admin/models/admin-product.model';
+import { AdminCategoryService } from '@app/admin/services/admin-category.service';
+import { AdminProductListItemDto } from '@app/admin/models/admin-product.model';
+import { AdminCategoryDto } from '@app/admin/models/admin-category.model';
 import {
   Product,
   ProductListingService,
@@ -18,11 +20,13 @@ import { IconComponent } from '@app/shared/components/icon/icon.component';
 })
 export class ProductListByCategoryComponent implements OnInit {
   private readonly productService = inject(AdminProductService);
+  private readonly categoryService = inject(AdminCategoryService);
   private readonly productListingService = inject(ProductListingService);
+  private readonly route = inject(ActivatedRoute);
 
   protected readonly pageSize = 20;
 
-  protected readonly categories = signal<CategoryDto[]>([]);
+  protected readonly categories = signal<AdminCategoryDto[]>([]);
   protected readonly products = signal<AdminProductListItemDto[]>([]);
   protected readonly selectedCategorySlug = signal('');
   protected searchQuery = '';
@@ -54,12 +58,20 @@ export class ProductListByCategoryComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    const state = history.state as { productSaved?: boolean };
+    const state = history.state as { productSaved?: boolean; categorySlug?: string };
     if (state?.productSaved) {
       this.successMessage.set('Product saved successfully.');
     }
 
-    this.loadCategories();
+    this.loadCategories(this.resolvePreferredCategorySlug(state?.categorySlug));
+  }
+
+  private resolvePreferredCategorySlug(stateSlug?: string): string {
+    return (
+      stateSlug?.trim() ||
+      this.route.snapshot.queryParamMap.get('categorySlug')?.trim() ||
+      ''
+    );
   }
 
   protected selectCategory(slug: string): void {
@@ -144,18 +156,19 @@ export class ProductListByCategoryComponent implements OnInit {
     });
   }
 
-  private loadCategories(): void {
+  private loadCategories(preferredSlug = ''): void {
     this.loading.set(true);
     this.error.set('');
 
-    this.productService.getCategories().subscribe({
+    this.categoryService.getCategories().subscribe({
       next: (categories) => {
         this.categories.set(categories);
 
-        const firstSlug = categories[0]?.slug ?? '';
-        this.selectedCategorySlug.set(firstSlug);
+        const matchedSlug = categories.find((category) => category.slug === preferredSlug)?.slug;
+        const selectedSlug = matchedSlug ?? categories[0]?.slug ?? '';
+        this.selectedCategorySlug.set(selectedSlug);
 
-        if (firstSlug) {
+        if (selectedSlug) {
           this.loadProducts();
         } else {
           this.products.set([]);

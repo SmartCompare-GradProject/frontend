@@ -1,9 +1,3 @@
-export interface CategoryDto {
-  id: number;
-  name: string;
-  slug: string;
-}
-
 export interface AdminProductListItemDto {
   id: number;
   name: string;
@@ -24,6 +18,18 @@ export interface UpdateProductRequest {
   releaseDate?: string | null;
   image?: string | null;
   sourceUrl?: string | null;
+  hasVariants: boolean;
+  specs: string;
+}
+
+/** Matches backend AdminCreateProductRequest */
+export interface CreateProductRequest {
+  name: string;
+  brand: string;
+  categorySlug: string;
+  releaseDate?: string | null;
+  image?: string | null;
+  sourceUrl: string;
   hasVariants: boolean;
   specs: string;
 }

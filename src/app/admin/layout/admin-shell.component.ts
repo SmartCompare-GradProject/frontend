@@ -15,6 +15,7 @@ export class AdminShellComponent {
 
   protected readonly navLinks = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: 'dashboard' },
+    { path: '/admin/categories', label: 'Categories', icon: 'category' },
     { path: '/admin/products', label: 'Products', icon: 'inventory_2' },
     { path: '/admin/users', label: 'Users', icon: 'group' },
   ] as const;

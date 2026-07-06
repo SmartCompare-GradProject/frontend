@@ -3,7 +3,7 @@ import { Observable, delay, of, throwError } from 'rxjs';
 import { PagedResponse } from '@app/core/models/product-api.model';
 import {
   AdminProductListItemDto,
-  CategoryDto,
+  CreateProductRequest,
   UpdateProductRequest,
 } from '@app/admin/models/admin-product.model';
 
@@ -26,12 +26,6 @@ function toPagedResponse<T>(
     last: totalPages === 0 || page >= totalPages - 1,
   };
 }
-
-const CATEGORIES: CategoryDto[] = [
-  { id: 1, name: 'Mobile', slug: 'mobile' },
-  { id: 2, name: 'Laptops', slug: 'laptops' },
-  { id: 3, name: 'Tablets', slug: 'tablet' },
-];
 
 const PRODUCTS: AdminProductListItemDto[] = [
   // ── The "Perfect" Product ──
@@ -280,10 +274,6 @@ const PRODUCTS: AdminProductListItemDto[] = [
 export class AdminProductMockService {
   private readonly products = [...PRODUCTS];
 
-  getCategories(): Observable<CategoryDto[]> {
-    return of([...CATEGORIES]).pipe(delay(200));
-  }
-
   listProducts(
     categorySlug: string,
     page = 0,
@@ -299,6 +289,43 @@ export class AdminProductMockService {
       return throwError(() => new Error(`Product with id ${id} not found.`)).pipe(delay(200));
     }
     return of({ ...product }).pipe(delay(200));
+  }
+
+  createProduct(body: CreateProductRequest): Observable<AdminProductListItemDto> {
+    const categoryName =
+      { mobile: 'Mobile', laptops: 'Laptops', tablet: 'Tablets' }[body.categorySlug] ??
+      body.categorySlug;
+
+    if (
+      this.products.some(
+        (product) => product.sourceUrl != null && product.sourceUrl === body.sourceUrl,
+      )
+    ) {
+      return throwError(() => new Error('Product sourceUrl already exists')).pipe(delay(200));
+    }
+
+    try {
+      JSON.parse(body.specs);
+    } catch {
+      return throwError(() => new Error('specs must be valid JSON')).pipe(delay(200));
+    }
+
+    const nextId = this.products.reduce((max, product) => Math.max(max, product.id), 0) + 1;
+    const created: AdminProductListItemDto = {
+      id: nextId,
+      name: body.name,
+      brand: body.brand,
+      categorySlug: body.categorySlug,
+      categoryName,
+      image: body.image ?? null,
+      hasVariants: body.hasVariants,
+      specs: body.specs,
+      releaseDate: body.releaseDate ?? null,
+      sourceUrl: body.sourceUrl,
+    };
+
+    this.products.push(created);
+    return of({ ...created }).pipe(delay(400));
   }
 
   updateProduct(id: number, body: UpdateProductRequest): Observable<AdminProductListItemDto> {

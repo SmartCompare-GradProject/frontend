@@ -1,0 +1,178 @@
+<div class="mb-6 lg:mb-8">
+  <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white lg:text-3xl">Categories</h1>
+  <p class="mt-2 max-w-2xl text-sm text-slate-500 dark:text-slate-400 lg:text-base">
+    Create and manage product categories. Each category needs a unique slug used across the catalog.
+  </p>
+</div>
+
+@if (loadError()) {
+  <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-900/20 dark:text-red-300">
+    {{ loadError() }}
+  </div>
+}
+
+@if (deleteError()) {
+  <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-900/20 dark:text-red-300">
+    {{ deleteError() }}
+  </div>
+}
+
+<div class="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+  <div class="flex flex-col gap-2 border-b border-slate-200 px-4 py-4 dark:border-slate-700 sm:px-6">
+    <div class="flex items-center justify-between gap-3">
+      <div>
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Create Category</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Slugs are auto-generated from the name unless you edit them manually.
+        </p>
+      </div>
+      <button
+        type="button"
+        (click)="toggleCreateForm()"
+        class="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-900"
+      >
+        <app-icon [name]="showCreateForm() ? 'expand_less' : 'expand_more'" size="sm" />
+        {{ showCreateForm() ? 'Hide' : 'Show' }}
+      </button>
+    </div>
+  </div>
+
+  @if (showCreateForm()) {
+    <form
+      class="space-y-4 px-4 py-5 sm:px-6"
+      [formGroup]="createForm"
+      (ngSubmit)="submitCreate()"
+    >
+      @if (formError()) {
+        <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-900/20 dark:text-red-300">
+          {{ formError() }}
+        </div>
+      }
+
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div>
+          <label for="category-name" class="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+            Name
+          </label>
+          <input
+            id="category-name"
+            type="text"
+            formControlName="name"
+            (blur)="onNameBlur()"
+            placeholder="e.g. Mobile Phones"
+            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-primary focus:bg-white dark:border-slate-600 dark:bg-slate-900 dark:text-white dark:focus:bg-slate-950"
+          />
+          @if (fieldError('name')) {
+            <p class="mt-1.5 text-xs text-red-600 dark:text-red-400">{{ fieldError('name') }}</p>
+          }
+        </div>
+
+        <div>
+          <label for="category-slug" class="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+            Slug
+          </label>
+          <input
+            id="category-slug"
+            type="text"
+            formControlName="slug"
+            (input)="onSlugInput()"
+            placeholder="e.g. mobile-phones"
+            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-primary focus:bg-white dark:border-slate-600 dark:bg-slate-900 dark:text-white dark:focus:bg-slate-950"
+          />
+          @if (fieldError('slug')) {
+            <p class="mt-1.5 text-xs text-red-600 dark:text-red-400">{{ fieldError('slug') }}</p>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button
+          type="submit"
+          [disabled]="submitting()"
+          class="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-500/25 transition-all hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          @if (submitting()) {
+            <span>Creating…</span>
+          } @else {
+            <app-icon name="add" size="sm" />
+            <span>Create Category</span>
+          }
+        </button>
+
+        <button
+          type="button"
+          (click)="resetCreateForm()"
+          [disabled]="submitting()"
+          class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-900"
+        >
+          Clear
+        </button>
+      </div>
+    </form>
+  }
+</div>
+
+<div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+  <div class="flex flex-col gap-2 border-b border-slate-200 px-4 py-4 dark:border-slate-700 sm:px-6 lg:px-6">
+    <h2 class="text-lg font-bold text-slate-900 dark:text-white">All Categories</h2>
+    <p class="text-sm text-slate-500 dark:text-slate-400">
+      {{ categories().length }} categor{{ categories().length === 1 ? 'y' : 'ies' }}
+      @if (loading()) {
+        <span> · Loading…</span>
+      }
+    </p>
+  </div>
+
+  <div class="w-full overflow-x-auto">
+    <table class="w-full min-w-[24rem] text-left text-sm lg:min-w-180">
+      <thead class="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:border-slate-700 dark:bg-slate-900/60">
+        <tr>
+          <th class="px-4 py-3.5 font-semibold lg:px-6">Name</th>
+          <th class="px-4 py-3.5 font-semibold lg:px-6">Slug</th>
+          <th class="hidden px-4 py-3.5 font-semibold sm:table-cell lg:px-6">ID</th>
+          <th class="px-4 py-3.5 text-right font-semibold lg:px-6">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+        @if (!loading() && categories().length === 0) {
+          <tr>
+            <td colspan="4" class="px-6 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
+              No categories yet. Create one above to get started.
+            </td>
+          </tr>
+        }
+
+        @for (category of categories(); track category.id) {
+          <tr class="align-top transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-900/40">
+            <td class="px-4 py-4 lg:px-6">
+              <p class="font-medium text-slate-900 dark:text-white">{{ category.name }}</p>
+            </td>
+            <td class="px-4 py-4 lg:px-6">
+              <code class="rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-700 dark:bg-slate-900 dark:text-slate-300">
+                {{ category.slug }}
+              </code>
+            </td>
+            <td class="hidden px-4 py-4 text-slate-400 sm:table-cell lg:px-6">
+              {{ category.id }}
+            </td>
+            <td class="px-4 py-4 text-right lg:px-6">
+              <button
+                type="button"
+                (click)="deleteCategory(category)"
+                [disabled]="deletingCategoryId() === category.id"
+                class="inline-flex items-center gap-1 rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-900/20"
+              >
+                <app-icon name="delete" size="sm" />
+                @if (deletingCategoryId() === category.id) {
+                  Deleting…
+                } @else {
+                  Delete
+                }
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

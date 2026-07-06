@@ -6,7 +6,7 @@ import { ApiResponse } from '@app/core/models/api-response.model';
 import { PagedResponse } from '@app/core/models/product-api.model';
 import {
   AdminProductListItemDto,
-  CategoryDto,
+  CreateProductRequest,
   UpdateProductRequest,
 } from '@app/admin/models/admin-product.model';
 import { AdminProductMockService } from '@app/admin/services/mocks/admin-product.mock.service';
@@ -16,16 +16,6 @@ export class AdminProductService {
   private readonly http = inject(HttpClient);
   private readonly mock = inject(AdminProductMockService);
   private readonly apiUrl = `${environment.apiUrl}/api/v1`;
-
-  getCategories(): Observable<CategoryDto[]> {
-    if (environment.useMockAdminApi) {
-      return this.mock.getCategories();
-    }
-
-    return this.http
-      .get<ApiResponse<CategoryDto[]>>(`${this.apiUrl}/admin/categories`)
-      .pipe(map((response) => response.data ?? []));
-  }
 
   listProducts(
     categorySlug: string,
@@ -69,6 +59,16 @@ export class AdminProductService {
 
     return this.http
       .get<ApiResponse<AdminProductListItemDto>>(`${this.apiUrl}/admin/products/${id}`)
+      .pipe(map((response) => response.data));
+  }
+
+  createProduct(body: CreateProductRequest): Observable<AdminProductListItemDto> {
+    if (environment.useMockAdminApi) {
+      return this.mock.createProduct(body);
+    }
+
+    return this.http
+      .post<ApiResponse<AdminProductListItemDto>>(`${this.apiUrl}/admin/products`, body)
       .pipe(map((response) => response.data));
   }
 
